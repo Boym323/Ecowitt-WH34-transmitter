@@ -1,3 +1,3 @@
 Ecowitt-WH34-transmitter
 
-Funkční prototyp na emulaci půdních čidel Ecowitt WN34 skrte Lolin D32 RFM69HCW. Příjem otestován jak skrze rtl_433, tak i bránu GW3000. 
+Functional prototype emulating Ecowitt WN34 soil sensors using Lolin D32 and RFM69HCW. Reception verified via both rtl_433 and the GW3000 gateway.
