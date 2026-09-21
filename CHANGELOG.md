@@ -19,8 +19,10 @@ All notable changes to this project are documented in this file.
 - Added error reporting for both RF transmission attempts.
 - Scheduler deadlines are advanced from the previous deadline to avoid timing drift.
 - Scheduler timing is rollover-safe for `millis()`.
+- Restored the prototype's simulated temperature progression: each virtual sensor advances by 0.1 °C after its scheduled transmission and wraps to 20 °C above 30 °C.
 
 ### Internal
 - Replaced repeated hard-coded sensor count values with `SENSOR_COUNT`.
 - Made CRC and checksum functions accept const input buffers.
 - Split packet construction and RF transmission into separate functions for easier maintenance and future testing.
+- Moved simulated temperature progression into a dedicated helper with named constants.
