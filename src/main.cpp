@@ -14,6 +14,9 @@ constexpr uint32_t SENSOR_PERIOD_MS = 77000UL;
 constexpr uint8_t BATTERY_LEVEL = 0x4B; // 1.50 V (20 mV units)
 constexpr float MIN_TEMPERATURE_C = -40.0f;
 constexpr float MAX_TEMPERATURE_C = 60.0f;
+constexpr float SIMULATION_STEP_C = 0.1f;
+constexpr float SIMULATION_MAX_C = 30.0f;
+constexpr float SIMULATION_RESET_C = 20.0f;
 
 // Six unique IDs. The gateway will learn them as separate WN34 channels.
 uint32_t sensorIDs[SENSOR_COUNT] = {
@@ -117,6 +120,14 @@ bool sendOneSensor(uint32_t id, float tempC) {
   return transmitPacket(packet);
 }
 
+void advanceSimulatedTemperature(size_t index) {
+  temperatures[index] += SIMULATION_STEP_C;
+
+  if (temperatures[index] > SIMULATION_MAX_C) {
+    temperatures[index] = SIMULATION_RESET_C;
+  }
+}
+
 void requireRadioSuccess(const char *step, int16_t state) {
   if (state == RADIOLIB_ERR_NONE) {
     return;
@@ -184,6 +195,10 @@ void loop() {
       Serial.printf("Sensor %u packet was not transmitted successfully.\n",
                     static_cast<unsigned int>(i + 1));
     }
+
+    // Preserve the prototype behavior: every simulated sensor changes by
+    // 0.1 C after its scheduled transmission and wraps back to 20 C above 30 C.
+    advanceSimulatedTemperature(i);
 
     // Schedule from the previous deadline rather than from 'now' to avoid drift.
     do {
